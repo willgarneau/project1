@@ -5,8 +5,8 @@ editor: visual
 author: Will Garneau
 ---
 
-
 ```{r}
+#| eval: false
 install.packages("tidyverse")
 install.packages("tidytuesdayR")
 install.packages("here")
@@ -40,11 +40,10 @@ if (!dir.exists(here("data"))) {
 if (!file.exists(here("data", "chocolate.RDS"))) {
     url_csv <- "https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-01-18/chocolate.csv"
     chocolate <- readr::read_csv(url_csv)
-}
-
+    
     # save the file to RDS objects
     saveRDS(chocolate, file = here("data", "chocolate.RDS"))
-
+}
 ```
 
 ```{r}
@@ -67,6 +66,7 @@ str(chocolate)
 #1 Make a histogram of the rating scores to visualize the overall distribution of scores. Change the number of bins from the default to 10, 15, 20, and 25. Pick on the one that you think looks the best. Explain what the difference is when you change the number of bins and explain why you picked the one you did.
 
 ```{r}
+#| eval: false
 esquisser(chocolate)
 ```
 
@@ -147,4 +147,4 @@ summary<-summarize(location,
 summary %>% arrange(desc(mean))
 ```
 
-#Calculate the average rating across all country of origins for beans. Which top 3 countries have the highest ratings on average?
+# Calculate the average rating across all country of origins for beans. Which top 3 countries have the highest ratings on average?
