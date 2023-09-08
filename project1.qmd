@@ -1,0 +1,150 @@
+---
+title: "project1"
+format: html
+editor: visual
+author: Will Garneau
+---
+
+
+```{r}
+install.packages("tidyverse")
+install.packages("tidytuesdayR")
+install.packages("here")
+install.packages("janitor")
+install.packages("tab")
+install.packages('knitr', dependencies = TRUE)
+```
+
+```{r}
+library(here)
+library(tidyverse)
+library(tidytuesdayR)
+library(readr)
+library(esquisse)
+library(skimr)
+library(janitor)
+library(tab)
+library(knitr)
+```
+
+#Default code -- not using because it will max out API tuesdata \<- tidytuesdayR::tt_load("2022-01-18") chocolate \<- tuesdata\$chocolate
+
+```{r}
+if (!dir.exists(here("data"))) {
+    dir.create(here("data"))
+}
+```
+
+```{r}
+# saves data only once (not each time you knit a R Markdown)
+if (!file.exists(here("data", "chocolate.RDS"))) {
+    url_csv <- "https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-01-18/chocolate.csv"
+    chocolate <- readr::read_csv(url_csv)
+}
+
+    # save the file to RDS objects
+    saveRDS(chocolate, file = here("data", "chocolate.RDS"))
+
+```
+
+```{r}
+chocolate <- readRDS(here("data", "chocolate.RDS"))
+as_tibble(chocolate)
+```
+
+```{r}
+glimpse(chocolate)
+```
+
+```{r}
+dim(chocolate)
+```
+
+```{r}
+str(chocolate)
+```
+
+#1 Make a histogram of the rating scores to visualize the overall distribution of scores. Change the number of bins from the default to 10, 15, 20, and 25. Pick on the one that you think looks the best. Explain what the difference is when you change the number of bins and explain why you picked the one you did.
+
+```{r}
+esquisser(chocolate)
+```
+
+```{r}
+ggplot(chocolate) +
+  aes(x = rating) +
+  geom_histogram(bins = 25L, fill = "#112446") +
+  theme_minimal()
+```
+
+#2 Consider the countries where the beans originated from. How many reviews come from each country of bean origin?
+
+```{r}
+origin<-select(chocolate, country_of_bean_origin) 
+```
+
+```{r}
+chocolate.o <- group_by(origin,country_of_bean_origin)
+```
+
+```{r}
+chocolate.o %>% group_by(country_of_bean_origin) %>% count()
+```
+
+#3 What is average rating scores from reviews of chocolate bars that have Ecuador as country_of_bean_origin in this dataset? For this same set of reviews, also calculate (1) the total number of reviews and (2) the standard deviation of the rating scores. Your answer should be a new data frame with these three summary statistics in three columns. Label the name of these columns mean, sd, and total.
+
+```{r}
+rating<-select(chocolate, country_of_bean_origin)
+```
+
+```{r}
+rating.ecuador <- filter(rating, country_of_bean_origin == "Ecuador")
+```
+
+```{r}
+count(rating.ecuador)
+```
+
+```{r}
+mean(rating.ecuador$rating)
+```
+
+```{r}
+sd(rating.ecuador$rating)
+```
+
+```{r}
+summary.ecuador<-tibble(
+  total = count(rating.ecuador),
+  mean = mean(rating.ecuador$rating),
+  sd = sd(rating.ecuador$rating)
+  
+)
+```
+
+#Which country makes the best chocolate (or has the highest ratings on average) with beans from Ecuador?
+
+```{r}
+company.reviews<-select(chocolate, company_location,country_of_bean_origin,rating)
+```
+
+```{r}
+company.ecuador<-filter(company.reviews, country_of_bean_origin == "Ecuador")
+```
+
+```{r}
+location<-group_by(company.ecuador, company_location)
+```
+
+```{r}
+summary<-summarize(location,
+          mean = mean(rating, na.rm= TRUE),
+          location = company_location,
+          origin = country_of_bean_origin)
+```
+
+```{r}
+summary %>% arrange(desc(mean))
+```
+
+#Calculate the average rating across all country of origins for beans. Which top 3 countries have the highest ratings on average?
