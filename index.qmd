@@ -10,15 +10,17 @@ editor_options:
 ```{r}
 #| eval: false
 install.packages("tidyverse")
-install.packages("tidytuesdayR")
 install.packages("here")
+install.packages("tidytuesdayR")
 install.packages("janitor")
+install.packages("esquisse")
+install.packages("skimr")
 install.packages("tab")
 install.packages('knitr', dependencies = TRUE)
 ```
 
 ```{r}
-#| eval: false
+echo = FALSE
 library(here)
 library(tidyverse)
 library(tidytuesdayR)
@@ -30,7 +32,15 @@ library(tab)
 library(knitr)
 ```
 
-#Default code -- not using because it will max out API tuesdata \<- tidytuesdayR::tt_load("2022-01-18") chocolate \<- tuesdata\$chocolate
+#Default code -- not using because it will max out API
+
+```{r}
+tuesdata <- tidytuesdayR::tt_load("2022-01-18") 
+```
+
+```{r}
+chocolate<- tuesdata$chocolate
+```
 
 ```{r}
 if (!dir.exists(here("data"))) {
@@ -125,6 +135,13 @@ summary.ecuador<-tibble(
 )
 ```
 
+```{r}
+print(summary.ecuador)
+```
+
+```
+
+
 #Which country makes the best chocolate (or has the highest ratings on average) with beans from Ecuador?
 
 ```{r}
@@ -145,6 +162,8 @@ summary<-summarize(location,
           location = company_location,
           origin = country_of_bean_origin)
 ```
+
+
 
 ```{r}
 summary %>% arrange(desc(mean))
