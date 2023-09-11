@@ -3,6 +3,8 @@ title: "project1"
 format: html
 editor: visual
 author: Will Garneau
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r}
@@ -16,6 +18,7 @@ install.packages('knitr', dependencies = TRUE)
 ```
 
 ```{r}
+#| eval: false
 library(here)
 library(tidyverse)
 library(tidytuesdayR)
@@ -94,7 +97,7 @@ chocolate.o %>% group_by(country_of_bean_origin) %>% count()
 #3 What is average rating scores from reviews of chocolate bars that have Ecuador as country_of_bean_origin in this dataset? For this same set of reviews, also calculate (1) the total number of reviews and (2) the standard deviation of the rating scores. Your answer should be a new data frame with these three summary statistics in three columns. Label the name of these columns mean, sd, and total.
 
 ```{r}
-rating<-select(chocolate, country_of_bean_origin)
+rating<-select(chocolate, country_of_bean_origin,rating)
 ```
 
 ```{r}
