@@ -67,18 +67,6 @@ chocolate <- readRDS(here("data", "chocolate.RDS"))
 as_tibble(chocolate)
 ```
 
-```{r}
-glimpse(chocolate)
-```
-
-```{r}
-dim(chocolate)
-```
-
-```{r}
-str(chocolate)
-```
-
 #1 Make a histogram of the rating scores to visualize the overall distribution of scores. Change the number of bins from the default to 10, 15, 20, and 25. Pick on the one that you think looks the best. Explain what the difference is when you change the number of bins and explain why you picked the one you did.
 
 ```{r}
@@ -96,7 +84,7 @@ ggplot(chocolate) +
 #2 Consider the countries where the beans originated from. How many reviews come from each country of bean origin?
 
 ```{r}
-origin<-select(chocolate, country_of_bean_origin) 
+origin<-select(chocolate, country_of_bean_origin,rating) 
 ```
 
 ```{r}
@@ -142,8 +130,6 @@ summary.ecuador<-tibble(
 print(summary.ecuador)
 ```
 
-```
-
 
 #Which country makes the best chocolate (or has the highest ratings on average) with beans from Ecuador?
 
@@ -154,6 +140,7 @@ company.reviews<-select(chocolate, company_location,country_of_bean_origin,ratin
 ```{r}
 company.ecuador<-filter(company.reviews, country_of_bean_origin == "Ecuador")
 ```
+
 
 ```{r}
 location<-group_by(company.ecuador, company_location)
@@ -167,9 +154,32 @@ summary<-summarize(location,
 ```
 
 
-
 ```{r}
 summary %>% arrange(desc(mean))
 ```
 
 # Calculate the average rating across all country of origins for beans. Which top 3 countries have the highest ratings on average?
+
+
+```{r}
+origin %>%
+  group_by(country_of_bean_origin) %>%
+    summarize(mean = mean(rating, na.rm= TRUE))
+```
+
+
+#Following up on the previous problem, now remove any countries of bean origins that have less than 10 chocolate bar reviews. Now, which top 3 countries have the highest ratings on average?
+```{r}
+more_reviews<-chocolate %>%
+  group_by(country_of_bean_origin) %>%
+  count(rating) %>%
+  filter(n>10)
+```
+
+```{r}
+more_reviews %>%
+  group_by(country_of_bean_origin) %>%
+    summarize(mean = mean(rating, na.rm= TRUE)) %>% 
+  arrange(desc(mean))
+```
+
