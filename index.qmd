@@ -7,7 +7,11 @@ editor_options:
   chunk_output_type: console
 ---
 
-```{r}
+```{r setup, include=FALSE} 
+knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
+```
+
+```{r, echo=FALSE}
 #| eval: false
 install.packages("tidyverse")
 install.packages("here")
@@ -19,8 +23,7 @@ install.packages("tab")
 install.packages('knitr', dependencies = TRUE)
 ```
 
-```{r}
-echo = FALSE
+```{r, echo=FALSE}
 library(here)
 library(tidyverse)
 library(tidytuesdayR)
