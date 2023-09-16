@@ -276,21 +276,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>origin <span class="sc">%&gt;%</span></span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(country_of_bean_origin) <span class="sc">%&gt;%</span></span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarize</span>(<span class="at">mean =</span> <span class="fu">mean</span>(rating, <span class="at">na.rm=</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarize</span>(<span class="at">mean =</span> <span class="fu">mean</span>(rating, <span class="at">na.rm=</span> <span class="cn">TRUE</span>))<span class="sc">%&gt;%</span> </span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(mean))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 62 × 2
    country_of_bean_origin  mean
    &lt;chr&gt;                  &lt;dbl&gt;
- 1 Australia               3.25
- 2 Belize                  3.23
- 3 Blend                   3.04
- 4 Bolivia                 3.18
- 5 Brazil                  3.26
- 6 Burma                   3   
- 7 Cameroon                3.08
- 8 China                   3.5 
- 9 Colombia                3.20
-10 Congo                   3.32
+ 1 Tobago                  3.62
+ 2 China                   3.5 
+ 3 Sao Tome &amp; Principe     3.5 
+ 4 Solomon Islands         3.45
+ 5 Congo                   3.32
+ 6 Thailand                3.3 
+ 7 Cuba                    3.29
+ 8 Vietnam                 3.29
+ 9 Papua New Guinea        3.28
+10 Madagascar              3.27
 # ℹ 52 more rows</code></pre>
 </div>
 </div>
@@ -330,6 +331,61 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 18 Bolivia                 3   
 19 Costa Rica              3   
 20 India                   3   </code></pre>
+</div>
+</div>
+<p>#For this last part, let’s explore the relationship between percent chocolate and ratings.</p>
+<p>#Identify the countries of bean origin with at least 50 reviews. Remove reviews from countries are not in this list.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>more_than_50<span class="ot">&lt;-</span><span class="fu">group_by</span>(chocolate, country_of_bean_origin) <span class="sc">%&gt;%</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(country_of_bean_origin)<span class="sc">%&gt;%</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(n<span class="sc">&gt;=</span><span class="dv">50</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>#Using the variable describing the chocolate percentage for each review, create a new column that groups chocolate percentages into one of four groups: (i) &lt;60%, (ii) &gt;=60 to &lt;70%, (iii) &gt;=70 to &lt;90%, and (iii) &gt;=90% (Hint check out the substr() function in base R and the case_when() function from dplyr – see example below).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>by_percent<span class="ot">&lt;-</span>chocolate <span class="sc">%&gt;%</span> <span class="fu">filter</span>(country_of_bean_origin <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Belize"</span>,<span class="st">"Blend"</span>,<span class="st">"Bolivia"</span>,<span class="st">"Brazil"</span>,<span class="st">"Colombia"</span>,<span class="st">"Dominican Republic"</span>, <span class="st">"Ecuador"</span>,<span class="st">"Guatemala"</span>,<span class="st">"Madagascar"</span>,<span class="st">"Mexico"</span>,<span class="st">"Nicaragua"</span>,<span class="st">"Papua New Guinea"</span>,<span class="st">"Peru"</span>,<span class="st">"Tanzania"</span>,<span class="st">"Venezuela"</span>,<span class="st">"Vietnam"</span>))<span class="sc">%&gt;%</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">percent_choc =</span> <span class="fu">case_when</span>(</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>        cocoa_percent <span class="sc">&gt;=</span> <span class="dv">90</span> <span class="sc">~</span> <span class="st">"&gt;=90%"</span>,</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>        cocoa_percent <span class="sc">&gt;=</span> <span class="dv">70</span> <span class="sc">&amp;</span> cocoa_percent <span class="sc">&lt;</span><span class="dv">90</span> <span class="sc">~</span> <span class="st">"&gt;=70 to &lt;90%"</span>,</span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>        cocoa_percent <span class="sc">&gt;=</span> <span class="dv">60</span> <span class="sc">&amp;</span> cocoa_percent <span class="sc">&lt;</span><span class="dv">70</span> <span class="sc">~</span> <span class="st">"&gt;=60 to &lt;70%"</span>,</span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>        cocoa_percent <span class="sc">&lt;</span> <span class="dv">60</span> <span class="sc">~</span> <span class="st">"&lt;60%"</span> </span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>    ))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>#Using the new column described in #2, re-order the factor levels (if needed) to be starting with the smallest percentage group and increasing to the largest percentage group (Hint check out the fct_relevel() function from forcats).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>by_percent<span class="sc">$</span>percent_choc <span class="ot">&lt;-</span> <span class="fu">factor</span>(by_percent<span class="sc">$</span>percent_choc, </span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"&lt;60%"</span>, <span class="st">"&gt;=60 to &lt;70%"</span>, <span class="st">"&gt;=70 to &lt;90%"</span>, <span class="st">"&gt;=90%"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>#For each country, make a set of four side-by-side boxplots plotting the groups on the x-axis and the ratings on the y-axis. These plots should be faceted by country.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(by_percent) <span class="sc">+</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a> <span class="fu">aes</span>(<span class="at">x =</span> percent_choc, <span class="at">y =</span> rating) <span class="sc">+</span></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a> <span class="fu">geom_col</span>(<span class="at">fill =</span> <span class="st">"#112446"</span>) <span class="sc">+</span></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a> <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a> <span class="fu">facet_wrap</span>(<span class="fu">vars</span>(country_of_bean_origin))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>(by_percent)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2,007 × 11
+     ref company_manufacturer company_location review_date
+   &lt;dbl&gt; &lt;chr&gt;                &lt;chr&gt;                  &lt;dbl&gt;
+ 1  2454 5150                 U.S.A.                  2019
+ 2  2458 5150                 U.S.A.                  2019
+ 3  2454 5150                 U.S.A.                  2019
+ 4  2546 5150                 U.S.A.                  2021
+ 5   797 A. Morin             France                  2012
+ 6   797 A. Morin             France                  2012
+ 7  1015 A. Morin             France                  2013
+ 8  1011 A. Morin             France                  2013
+ 9  1011 A. Morin             France                  2013
+10  1015 A. Morin             France                  2013
+# ℹ 1,997 more rows
+# ℹ 7 more variables: country_of_bean_origin &lt;chr&gt;,
+#   specific_bean_origin_or_bar_name &lt;chr&gt;, cocoa_percent &lt;chr&gt;,
+#   ingredients &lt;chr&gt;, most_memorable_characteristics &lt;chr&gt;, rating &lt;dbl&gt;,
+#   percent_choc &lt;fct&gt;</code></pre>
 </div>
 </div>
 </section>

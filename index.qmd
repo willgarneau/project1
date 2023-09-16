@@ -33,6 +33,7 @@ library(skimr)
 library(janitor)
 library(tab)
 library(knitr)
+library(ggplot2)
 ```
 
 #Default code -- not using because it will max out API
@@ -158,13 +159,14 @@ summary<-summarize(location,
 summary %>% arrange(desc(mean))
 ```
 
-# Calculate the average rating across all country of origins for beans. Which top 3 countries have the highest ratings on average?
+#Calculate the average rating across all country of origins for beans. Which top 3 countries have the highest ratings on average?
 
 
 ```{r}
 origin %>%
   group_by(country_of_bean_origin) %>%
-    summarize(mean = mean(rating, na.rm= TRUE))
+    summarize(mean = mean(rating, na.rm= TRUE))%>% 
+  arrange(desc(mean))
 ```
 
 
@@ -183,3 +185,93 @@ more_reviews %>%
   arrange(desc(mean))
 ```
 
+#For this last part, let’s explore the relationship between percent chocolate and ratings.
+
+
+#Identify the countries of bean origin with at least 50 reviews. Remove reviews from countries are not in this list.
+
+```{r}
+more_than_50<-group_by(chocolate, country_of_bean_origin) %>%
+  count(country_of_bean_origin)%>%
+  filter(n>=50)
+```
+
+#Using the variable describing the chocolate percentage for each review, create a new column that groups chocolate percentages into one of four groups: (i) <60%, (ii) >=60 to <70%, (iii) >=70 to <90%, and (iii) >=90% (Hint check out the substr() function in base R and the case_when() function from dplyr – see example below).
+
+```{r}
+by_percent<-chocolate %>% filter(country_of_bean_origin %in% c("Belize","Blend","Bolivia","Brazil","Colombia","Dominican Republic", "Ecuador","Guatemala","Madagascar","Mexico","Nicaragua","Papua New Guinea","Peru","Tanzania","Venezuela","Vietnam"))%>%
+  mutate(percent_choc = case_when(
+        cocoa_percent >= 90 ~ ">=90%",
+        cocoa_percent >= 70 & cocoa_percent <90 ~ ">=70 to <90%",
+        cocoa_percent >= 60 & cocoa_percent <70 ~ ">=60 to <70%",
+        cocoa_percent < 60 ~ "<60%" 
+        
+    ))
+```
+
+#Using the new column described in #2, re-order the factor levels (if needed) to be starting with the smallest percentage group and increasing to the largest percentage group (Hint check out the fct_relevel() function from forcats).
+
+```{r}
+by_percent$percent_choc <- factor(by_percent$percent_choc, 
+                                  levels = c("<60%", ">=60 to <70%", ">=70 to <90%", ">=90%"))
+```
+
+#For each country, make a set of four side-by-side boxplots plotting the groups on the x-axis and the ratings on the y-axis. These plots should be faceted by country.
+
+```{r}
+ggplot(by_percent) +
+ aes(x = percent_choc, y = rating) +
+ geom_col(fill = "#112446") +
+ theme_minimal() +
+ facet_wrap(vars(country_of_bean_origin))
+(by_percent)
+```
+
+#On average, which category of chocolate percentage is most highly rated? Do these countries mostly agree or are there disagreements?
+
+There is universally high ratings for chocolate with cocoa percent >=70 to <90%.
+
+
+#Part 2: Join two datasets together
+
+The goal of this part of the assignment is to join two datasets together. gapminder is a R package that contains an excerpt from the Gapminder data.
+
+#Use this dataset it to create a new column called continent in our chocolate dataset that contains the continent name for each review where the country of bean origin is.
+```{r}
+install.packages("gapminder")
+```
+
+```{r}
+library(gapminder)
+```
+
+```{r}
+view(gapminder)
+```
+
+
+```{r}
+gapminder<-gapminder
+```
+
+```{r}
+more_than_10<-group_by(chocolate, country_of_bean_origin) %>%
+  count(country_of_bean_origin)%>%
+  filter(n>=10)
+```
+
+
+chocolate %>% filter(country_of_bean_origin %in% c("Belize","Blend","Bolivia","Brazil","Colombia","Dominican Republic", "Ecuador","Guatemala","Madagascar","Mexico","Nicaragua","Papua New Guinea","Peru","Tanzania","Venezuela","Vietnam"))%>%
+
+```{r}
+merged<-left_join(more_than_10, gapminder, by=c('country_of_bean_origin' = 'country'))
+```
+
+
+#Only keep reviews that have reviews from countries of bean origin with at least 10 reviews.
+
+#Also, remove the country of bean origin named "Blend".
+
+#Make a set of violin plots with ratings on the y-axis and continents on the x-axis.
+
+#Hint:Check to see if there are any NAs in the new column. If there are any NAs, add the continent name for each row.
