@@ -271,8 +271,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 # ℹ 209 more rows</code></pre>
 </div>
 </div>
-<section id="calculate-the-average-rating-across-all-country-of-origins-for-beans.-which-top-3-countries-have-the-highest-ratings-on-average" class="level1">
-<h1>Calculate the average rating across all country of origins for beans. Which top 3 countries have the highest ratings on average?</h1>
+<p>#Calculate the average rating across all country of origins for beans. Which top 3 countries have the highest ratings on average?</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>origin <span class="sc">%&gt;%</span></span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(country_of_bean_origin) <span class="sc">%&gt;%</span></span>
@@ -388,7 +387,33 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 #   percent_choc &lt;fct&gt;</code></pre>
 </div>
 </div>
-</section>
+<p>#On average, which category of chocolate percentage is most highly rated? Do these countries mostly agree or are there disagreements?</p>
+<p>There is universally high ratings for chocolate with cocoa percent &gt;=70 to &lt;90%.</p>
+<p>#Part 2: Join two datasets together</p>
+<p>The goal of this part of the assignment is to join two datasets together. gapminder is a R package that contains an excerpt from the Gapminder data.</p>
+<p>#Use this dataset it to create a new column called continent in our chocolate dataset that contains the continent name for each review where the country of bean origin is.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gapminder)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">view</span>(gapminder)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>gapminder<span class="ot">&lt;-</span>gapminder</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>more_than_10<span class="ot">&lt;-</span><span class="fu">group_by</span>(chocolate, country_of_bean_origin) <span class="sc">%&gt;%</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(country_of_bean_origin)<span class="sc">%&gt;%</span></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(n<span class="sc">&gt;=</span><span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>chocolate %&gt;% filter(country_of_bean_origin %in% c(“Belize”,“Blend”,“Bolivia”,“Brazil”,“Colombia”,“Dominican Republic”, “Ecuador”,“Guatemala”,“Madagascar”,“Mexico”,“Nicaragua”,“Papua New Guinea”,“Peru”,“Tanzania”,“Venezuela”,“Vietnam”))%&gt;%</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>merged<span class="ot">&lt;-</span><span class="fu">left_join</span>(more_than_10, gapminder, <span class="at">by=</span><span class="fu">c</span>(<span class="st">'country_of_bean_origin'</span> <span class="ot">=</span> <span class="st">'country'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>#Only keep reviews that have reviews from countries of bean origin with at least 10 reviews.</p>
+<p>#Also, remove the country of bean origin named “Blend”.</p>
+<p>#Make a set of violin plots with ratings on the y-axis and continents on the x-axis.</p>
+<p>#Hint:Check to see if there are any NAs in the new column. If there are any NAs, add the continent name for each row.</p>
 
 </main>
 <!-- /main column -->

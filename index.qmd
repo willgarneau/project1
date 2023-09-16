@@ -21,6 +21,7 @@ install.packages("esquisse")
 install.packages("skimr")
 install.packages("tab")
 install.packages('knitr', dependencies = TRUE)
+install.packages("gapminder",repos = "http://cran.us.r-project.org")
 ```
 
 ```{r, echo=FALSE}
@@ -238,7 +239,8 @@ The goal of this part of the assignment is to join two datasets together. gapmin
 
 #Use this dataset it to create a new column called continent in our chocolate dataset that contains the continent name for each review where the country of bean origin is.
 ```{r}
-install.packages("gapminder")
+
+
 ```
 
 ```{r}
