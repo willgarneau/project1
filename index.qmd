@@ -238,23 +238,18 @@ There is universally high ratings for chocolate with cocoa percent >=70 to <90%.
 The goal of this part of the assignment is to join two datasets together. gapminder is a R package that contains an excerpt from the Gapminder data.
 
 #Use this dataset it to create a new column called continent in our chocolate dataset that contains the continent name for each review where the country of bean origin is.
-```{r}
-
-
-```
 
 ```{r}
 library(gapminder)
 ```
 
 ```{r}
-view(gapminder)
-```
-
-
-```{r}
 gapminder<-gapminder
 ```
+
+
+
+#Only keep reviews that have reviews from countries of bean origin with at least 10 reviews.
 
 ```{r}
 more_than_10<-group_by(chocolate, country_of_bean_origin) %>%
@@ -263,17 +258,295 @@ more_than_10<-group_by(chocolate, country_of_bean_origin) %>%
 ```
 
 
-chocolate %>% filter(country_of_bean_origin %in% c("Belize","Blend","Bolivia","Brazil","Colombia","Dominican Republic", "Ecuador","Guatemala","Madagascar","Mexico","Nicaragua","Papua New Guinea","Peru","Tanzania","Venezuela","Vietnam"))%>%
 
 ```{r}
 merged<-left_join(more_than_10, gapminder, by=c('country_of_bean_origin' = 'country'))
 ```
 
 
-#Only keep reviews that have reviews from countries of bean origin with at least 10 reviews.
+
+```{r}
+more10<- chocolate %>% 
+  filter(country_of_bean_origin %in% more_than_10$country_of_bean_origin) %>% left_join(gapminder, by=c('country_of_bean_origin' = 'country'))
+```
+
 
 #Also, remove the country of bean origin named "Blend".
 
-#Make a set of violin plots with ratings on the y-axis and continents on the x-axis.
+```{r}
+no_blend<-more10 %>%
+  filter(country_of_bean_origin != "Blend")
+```
+
+```{r}
+no_blend_na<- no_blend %>%
+  filter(is.na(continent))
+```
 
 #Hint:Check to see if there are any NAs in the new column. If there are any NAs, add the continent name for each row.
+
+```{r}
+no_blend$continent[which(no_blend$country_of_bean_origin == "Belize")] <- "Americas"
+no_blend$continent[which(no_blend$country_of_bean_origin == "Congo")] <- "Africa"
+no_blend$continent[which(no_blend$country_of_bean_origin == "Fiji")] <- "Oceania"
+no_blend$continent[which(no_blend$country_of_bean_origin == "Grenada")] <- "Americas"
+no_blend$continent[which(no_blend$country_of_bean_origin == "Papua New Guinea")] <- "Oceania"
+no_blend$continent[which(no_blend$country_of_bean_origin == "Sao Tome")] <- "Africa"
+no_blend$continent[which(no_blend$country_of_bean_origin == "Solomon Islands")] <- "Oceania"
+no_blend$continent[which(no_blend$country_of_bean_origin == "St. Lucia")] <- "Americas"
+no_blend$continent[which(no_blend$country_of_bean_origin == "Trinidad")] <- "Americas"
+no_blend$continent[which(no_blend$country_of_bean_origin == "U.S.A.")] <- "Americas"
+no_blend$continent[which(no_blend$country_of_bean_origin == "Vanuatu")] <- "Oceania"
+```
+
+
+#Make a set of violin plots with ratings on the y-axis and continents on the x-axis.
+```{r}
+ggplot(no_blend) +
+ aes(x = continent, y = rating) +
+ geom_violin(adjust = 1L, scale = "area", fill = "#112446") +
+ theme_minimal()
+```
+
+
+#Part 3: Convert wide data into long data
+The goal of this part of the assignment is to take a dataset that is either messy or simply not tidy and to make them tidy datasets. The objective is to gain some familiarity with the functions in the dplyr, tidyr packages. You may find it helpful to review the section on spreading and gathering data.
+
+Tasks
+We are going to create a set of features for us to plot over time. Use the functions in dplyr and tidyr to perform the following steps to the chocolate dataset:
+
+Create a new set of columns titled beans, sugar, cocoa_butter, vanilla, letchin, and salt that contain a 1 or 0 representing whether or not that review for the chocolate bar contained that ingredient (1) or not (0).
+
+```{r}
+chocolate <- chocolate %>%
+  mutate(beans = case_when(
+    str_detect(ingredients, fixed("B")) ~ 1,
+    TRUE ~ 0
+  ))
+```
+
+```{r}
+chocolate <- chocolate %>%
+  mutate(sugar = case_when(
+    str_detect(ingredients, fixed("S")) ~ 1,
+    TRUE ~ 0
+  ))
+```
+
+```{r}
+chocolate <- chocolate %>%
+  mutate(cocoa_butter = case_when(
+    str_detect(ingredients, fixed("C")) ~ 1,
+    TRUE ~ 0
+  ))
+```
+
+```{r}
+chocolate <- chocolate %>%
+  mutate(vanilla = case_when(
+    str_detect(ingredients, fixed("V")) ~ 1,
+    TRUE ~ 0
+  ))
+```
+
+
+```{r}
+chocolate <- chocolate %>%
+  mutate(letchin = case_when(
+    str_detect(ingredients, fixed("L")) ~ 1,
+    TRUE ~ 0
+  ))
+```
+
+```{r}
+chocolate <- chocolate %>%
+  mutate(salt = case_when(
+    str_detect(ingredients, fixed("S")) ~ 1,
+    TRUE ~ 0
+  ))
+```
+
+Create a new set of columns titled char_cocoa, char_sweet, char_nutty, char_creamy, char_roasty, char_earthy that contain a 1 or 0 representing whether or not that the most memorable characteristic for the chocolate bar had that word (1) or not (0). For example, if the word “sweet” appears in the most_memorable_characteristics, then record a 1, otherwise a 0 for that review in the char_sweet column (Hint: check out str_detect() from the stringr package).
+
+```{r}
+chocolate <- chocolate %>%
+  mutate(char_cocoa = case_when(
+    str_detect(most_memorable_characteristics, fixed("cocoa")) ~ 1,
+    TRUE ~ 0
+  ))
+```
+
+```{r}
+chocolate <- chocolate %>%
+  mutate(char_sweet = case_when(
+    str_detect(most_memorable_characteristics, fixed("sweet")) ~ 1,
+    TRUE ~ 0
+  ))
+```
+
+
+```{r}
+chocolate <- chocolate %>%
+  mutate(char_nutty = case_when(
+    str_detect(most_memorable_characteristics, fixed("nutty")) ~ 1,
+    TRUE ~ 0
+  ))
+```
+
+```{r}
+chocolate <- chocolate %>%
+  mutate(char_creamy = case_when(
+    str_detect(most_memorable_characteristics, fixed("creamy")) ~ 1,
+    TRUE ~ 0
+  ))
+```
+
+```{r}
+chocolate <- chocolate %>%
+  mutate(char_roasty = case_when(
+    str_detect(most_memorable_characteristics, fixed("roasty")) ~ 1,
+    TRUE ~ 0
+  ))
+```
+
+```{r}
+chocolate <- chocolate %>%
+  mutate(char_earthy = case_when(
+    str_detect(most_memorable_characteristics, fixed("earthy")) ~ 1,
+    TRUE ~ 0
+  ))
+```
+
+For each year (i.e. review_date), calculate the mean value in each new column you created across all reviews for that year. (Hint: If all has gone well thus far, you should have a dataset with 16 rows and 13 columns).
+
+
+```{r}
+new_chocolate <- chocolate
+```
+
+
+```{r}
+new_chocolate <-subset(new_chocolate, select = -c(company_manufacturer, company_location))
+```
+
+
+```{r}
+new_chocolate <-subset(new_chocolate, select = -c(ref))
+```
+
+```{r}
+new_chocolate <-subset(new_chocolate, select = -c(country_of_bean_origin))
+```
+
+```{r}
+new_chocolate <-subset(new_chocolate, select = -c(specific_bean_origin_or_bar_name))
+```
+
+```{r}
+new_chocolate <-subset(new_chocolate, select = -c(cocoa_percent))
+```
+
+```{r}
+new_chocolate <-subset(new_chocolate, select = -c(ingredients))
+```
+
+```{r}
+new_chocolate <-subset(new_chocolate, select = -c(most_memorable_characteristics))
+```
+
+```{r}
+new_chocolate <-subset(new_chocolate, select = -c(rating))
+```
+
+
+
+```{r}
+new_chocolate <- new_chocolate %>%
+  group_by(review_date) %>%
+  mutate(mean_beans = mean(beans, na.rm = TRUE))
+```
+
+
+```{r}
+new_chocolate <- new_chocolate %>%
+  group_by(review_date) %>%
+  mutate(mean_sugar = mean(sugar, na.rm = TRUE))
+```
+
+
+```{r}
+new_chocolate <- new_chocolate %>%
+  group_by(review_date) %>%
+  mutate(mean_cocoa_butter = mean(cocoa_butter, na.rm = TRUE))
+```
+
+
+```{r}
+new_chocolate <- new_chocolate %>%
+  group_by(review_date) %>%
+  mutate(mean_vanilla = mean(vanilla, na.rm = TRUE))
+```
+
+
+```{r}
+new_chocolate <- new_chocolate %>%
+  group_by(review_date) %>%
+  mutate(mean_letchin = mean(letchin, na.rm = TRUE))
+```
+
+
+```{r}
+new_chocolate <- new_chocolate %>%
+  group_by(review_date) %>%
+  mutate(mean_salt = mean(salt, na.rm = TRUE))
+```
+
+
+```{r}
+new_chocolate <- new_chocolate %>%
+  group_by(review_date) %>%
+  mutate(mean_cocoa = mean(char_cocoa, na.rm = TRUE))
+```
+
+
+```{r}
+new_chocolate <- new_chocolate %>%
+  group_by(review_date) %>%
+  mutate(mean_sweet = mean(char_sweet, na.rm = TRUE))
+```
+
+
+```{r}
+new_chocolate <- new_chocolate %>%
+  group_by(review_date) %>%
+  mutate(mean_nutty = mean(char_nutty, na.rm = TRUE))
+```
+
+
+
+```{r}
+new_chocolate <- new_chocolate %>%
+  group_by(review_date) %>%
+  mutate(mean_creamy = mean(char_creamy, na.rm = TRUE))
+```
+
+
+
+```{r}
+new_chocolate <- new_chocolate %>%
+  group_by(review_date) %>%
+  mutate(mean_roasty = mean(char_roasty, na.rm = TRUE))
+```
+
+
+```{r}
+new_chocolate <- new_chocolate %>%
+  group_by(review_date) %>%
+  mutate(mean_earthy = mean(char_earthy, na.rm = TRUE))
+```
+
+
+
+Convert this wide dataset into a long dataset with a new feature and mean_score column.
+
+

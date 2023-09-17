@@ -396,24 +396,54 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gapminder)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">view</span>(gapminder)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>gapminder<span class="ot">&lt;-</span>gapminder</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>more_than_10<span class="ot">&lt;-</span><span class="fu">group_by</span>(chocolate, country_of_bean_origin) <span class="sc">%&gt;%</span></span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(country_of_bean_origin)<span class="sc">%&gt;%</span></span>
-<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(n<span class="sc">&gt;=</span><span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>chocolate %&gt;% filter(country_of_bean_origin %in% c(“Belize”,“Blend”,“Bolivia”,“Brazil”,“Colombia”,“Dominican Republic”, “Ecuador”,“Guatemala”,“Madagascar”,“Mexico”,“Nicaragua”,“Papua New Guinea”,“Peru”,“Tanzania”,“Venezuela”,“Vietnam”))%&gt;%</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>merged<span class="ot">&lt;-</span><span class="fu">left_join</span>(more_than_10, gapminder, <span class="at">by=</span><span class="fu">c</span>(<span class="st">'country_of_bean_origin'</span> <span class="ot">=</span> <span class="st">'country'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>gapminder<span class="ot">&lt;-</span>gapminder</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>#Only keep reviews that have reviews from countries of bean origin with at least 10 reviews.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>more_than_10<span class="ot">&lt;-</span><span class="fu">group_by</span>(chocolate, country_of_bean_origin) <span class="sc">%&gt;%</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(country_of_bean_origin)<span class="sc">%&gt;%</span></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(n<span class="sc">&gt;=</span><span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>merged<span class="ot">&lt;-</span><span class="fu">left_join</span>(more_than_10, gapminder, <span class="at">by=</span><span class="fu">c</span>(<span class="st">'country_of_bean_origin'</span> <span class="ot">=</span> <span class="st">'country'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>more10<span class="ot">&lt;-</span> chocolate <span class="sc">%&gt;%</span> </span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(country_of_bean_origin <span class="sc">%in%</span> more_than_10<span class="sc">$</span>country_of_bean_origin) <span class="sc">%&gt;%</span> <span class="fu">left_join</span>(gapminder, <span class="at">by=</span><span class="fu">c</span>(<span class="st">'country_of_bean_origin'</span> <span class="ot">=</span> <span class="st">'country'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 <p>#Also, remove the country of bean origin named “Blend”.</p>
-<p>#Make a set of violin plots with ratings on the y-axis and continents on the x-axis.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>no_blend<span class="ot">&lt;-</span>more10 <span class="sc">%&gt;%</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(country_of_bean_origin <span class="sc">!=</span> <span class="st">"Blend"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>no_blend_na<span class="ot">&lt;-</span> no_blend <span class="sc">%&gt;%</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">is.na</span>(continent))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 <p>#Hint:Check to see if there are any NAs in the new column. If there are any NAs, add the continent name for each row.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>no_blend<span class="sc">$</span>continent[<span class="fu">which</span>(no_blend<span class="sc">$</span>country_of_bean_origin <span class="sc">==</span> <span class="st">"Belize"</span>)] <span class="ot">&lt;-</span> <span class="st">"Americas"</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>no_blend<span class="sc">$</span>continent[<span class="fu">which</span>(no_blend<span class="sc">$</span>country_of_bean_origin <span class="sc">==</span> <span class="st">"Congo"</span>)] <span class="ot">&lt;-</span> <span class="st">"Africa"</span></span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>no_blend<span class="sc">$</span>continent[<span class="fu">which</span>(no_blend<span class="sc">$</span>country_of_bean_origin <span class="sc">==</span> <span class="st">"Fiji"</span>)] <span class="ot">&lt;-</span> <span class="st">"Oceania"</span></span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>no_blend<span class="sc">$</span>continent[<span class="fu">which</span>(no_blend<span class="sc">$</span>country_of_bean_origin <span class="sc">==</span> <span class="st">"Grenada"</span>)] <span class="ot">&lt;-</span> <span class="st">"Americas"</span></span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>no_blend<span class="sc">$</span>continent[<span class="fu">which</span>(no_blend<span class="sc">$</span>country_of_bean_origin <span class="sc">==</span> <span class="st">"Papua New Guinea"</span>)] <span class="ot">&lt;-</span> <span class="st">"Oceania"</span></span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>no_blend<span class="sc">$</span>continent[<span class="fu">which</span>(no_blend<span class="sc">$</span>country_of_bean_origin <span class="sc">==</span> <span class="st">"Sao Tome"</span>)] <span class="ot">&lt;-</span> <span class="st">"Africa"</span></span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a>no_blend<span class="sc">$</span>continent[<span class="fu">which</span>(no_blend<span class="sc">$</span>country_of_bean_origin <span class="sc">==</span> <span class="st">"Solomon Islands"</span>)] <span class="ot">&lt;-</span> <span class="st">"Oceania"</span></span>
+<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a>no_blend<span class="sc">$</span>continent[<span class="fu">which</span>(no_blend<span class="sc">$</span>country_of_bean_origin <span class="sc">==</span> <span class="st">"St. Lucia"</span>)] <span class="ot">&lt;-</span> <span class="st">"Americas"</span></span>
+<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a>no_blend<span class="sc">$</span>continent[<span class="fu">which</span>(no_blend<span class="sc">$</span>country_of_bean_origin <span class="sc">==</span> <span class="st">"Trinidad"</span>)] <span class="ot">&lt;-</span> <span class="st">"Americas"</span></span>
+<span id="cb49-10"><a href="#cb49-10" aria-hidden="true" tabindex="-1"></a>no_blend<span class="sc">$</span>continent[<span class="fu">which</span>(no_blend<span class="sc">$</span>country_of_bean_origin <span class="sc">==</span> <span class="st">"U.S.A."</span>)] <span class="ot">&lt;-</span> <span class="st">"Americas"</span></span>
+<span id="cb49-11"><a href="#cb49-11" aria-hidden="true" tabindex="-1"></a>no_blend<span class="sc">$</span>continent[<span class="fu">which</span>(no_blend<span class="sc">$</span>country_of_bean_origin <span class="sc">==</span> <span class="st">"Vanuatu"</span>)] <span class="ot">&lt;-</span> <span class="st">"Oceania"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>#Make a set of violin plots with ratings on the y-axis and continents on the x-axis.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(no_blend) <span class="sc">+</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a> <span class="fu">aes</span>(<span class="at">x =</span> continent, <span class="at">y =</span> rating) <span class="sc">+</span></span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a> <span class="fu">geom_violin</span>(<span class="at">adjust =</span> 1L, <span class="at">scale =</span> <span class="st">"area"</span>, <span class="at">fill =</span> <span class="st">"#112446"</span>) <span class="sc">+</span></span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a> <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-40-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
 
 </main>
 <!-- /main column -->
