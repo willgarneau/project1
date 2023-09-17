@@ -630,6 +630,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb85-3"><a href="#cb85-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">"feature"</span>, </span>
 <span id="cb85-4"><a href="#cb85-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"mean_score"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a><span class="fu">view</span>(long_chocolate)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 <p>Part 4: Data visualization In this part of the project, we will continue to work with our now tidy song dataset from the previous part.</p>
 <p>Tasks Use the functions in ggplot2 package to make a scatter plot of the mean_scores (y-axis) over time (x-axis). One plot for each mean_score. For full credit, your plot should include:</p>
 <p>An overall title for the plot and a subtitle summarizing key trends that you found. Also include a caption in the figure with your name.</p>
@@ -637,23 +640,78 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Notes You may need to use functions outside these packages to obtain this result.</p>
 <p>Don’t worry about the ordering of the rows or columns. Depending on whether you use gather() or pivot_longer(), the order of your output may differ from what is printed above. As long as the result is a tidy data set, that is sufficient.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(long_chocolate) <span class="sc">+</span></span>
-<span id="cb86-2"><a href="#cb86-2" aria-hidden="true" tabindex="-1"></a> <span class="fu">aes</span>(<span class="at">x =</span> review_date, <span class="at">y =</span> mean_score) <span class="sc">+</span></span>
-<span id="cb86-3"><a href="#cb86-3" aria-hidden="true" tabindex="-1"></a> <span class="fu">geom_point</span>(<span class="at">shape =</span> <span class="st">"circle"</span>, <span class="at">size =</span> <span class="fl">1.5</span>, </span>
-<span id="cb86-4"><a href="#cb86-4" aria-hidden="true" tabindex="-1"></a> <span class="at">colour =</span> <span class="st">"#112446"</span>) <span class="sc">+</span></span>
-<span id="cb86-5"><a href="#cb86-5" aria-hidden="true" tabindex="-1"></a> <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Years"</span>, <span class="at">y =</span> <span class="st">"%"</span>, <span class="at">title =</span> <span class="st">"Chocolate"</span>, <span class="at">subtitle =</span> <span class="st">"Trends in chocolate characteristics"</span>) <span class="sc">+</span></span>
-<span id="cb86-6"><a href="#cb86-6" aria-hidden="true" tabindex="-1"></a> <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb86-7"><a href="#cb86-7" aria-hidden="true" tabindex="-1"></a> <span class="fu">facet_wrap</span>(<span class="fu">vars</span>(feature))<span class="sc">+</span></span>
-<span id="cb86-8"><a href="#cb86-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_smooth</span>(<span class="at">method =</span> <span class="st">"loess"</span>,</span>
-<span id="cb86-9"><a href="#cb86-9" aria-hidden="true" tabindex="-1"></a>              <span class="at">formula =</span> y <span class="sc">~</span> x,</span>
-<span id="cb86-10"><a href="#cb86-10" aria-hidden="true" tabindex="-1"></a>              <span class="at">geom =</span> <span class="st">"smooth"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb87"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(long_chocolate) <span class="sc">+</span></span>
+<span id="cb87-2"><a href="#cb87-2" aria-hidden="true" tabindex="-1"></a> <span class="fu">aes</span>(<span class="at">x =</span> review_date, <span class="at">y =</span> mean_score) <span class="sc">+</span></span>
+<span id="cb87-3"><a href="#cb87-3" aria-hidden="true" tabindex="-1"></a> <span class="fu">geom_point</span>(<span class="at">shape =</span> <span class="st">"circle"</span>, <span class="at">size =</span> <span class="fl">1.5</span>, </span>
+<span id="cb87-4"><a href="#cb87-4" aria-hidden="true" tabindex="-1"></a> <span class="at">colour =</span> <span class="st">"#112446"</span>) <span class="sc">+</span></span>
+<span id="cb87-5"><a href="#cb87-5" aria-hidden="true" tabindex="-1"></a> <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Years"</span>, <span class="at">y =</span> <span class="st">"%"</span>, <span class="at">title =</span> <span class="st">"Chocolate"</span>, <span class="at">subtitle =</span> <span class="st">"Trends in chocolate characteristics"</span>) <span class="sc">+</span></span>
+<span id="cb87-6"><a href="#cb87-6" aria-hidden="true" tabindex="-1"></a> <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb87-7"><a href="#cb87-7" aria-hidden="true" tabindex="-1"></a> <span class="fu">facet_wrap</span>(<span class="fu">vars</span>(feature))<span class="sc">+</span></span>
+<span id="cb87-8"><a href="#cb87-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_smooth</span>(<span class="at">method =</span> <span class="st">"loess"</span>,</span>
+<span id="cb87-9"><a href="#cb87-9" aria-hidden="true" tabindex="-1"></a>              <span class="at">formula =</span> y <span class="sc">~</span> x,</span>
+<span id="cb87-10"><a href="#cb87-10" aria-hidden="true" tabindex="-1"></a>              <span class="at">geom =</span> <span class="st">"smooth"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="index_files/figure-html/unnamed-chunk-76-1.png" class="img-fluid" width="672"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-77-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(long_chocolate, <span class="fu">aes</span>(<span class="at">x =</span> review_date, <span class="at">y =</span> mean_score)) <span class="sc">+</span></span>
+<span id="cb88-2"><a href="#cb88-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_area</span>(<span class="fu">aes</span>(<span class="at">fill =</span> feature), <span class="at">position =</span> <span class="st">"identity"</span>, <span class="at">colour =</span> <span class="st">"blue"</span>, <span class="at">size =</span> .<span class="dv">2</span>, <span class="at">alpha =</span> .<span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-78-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>#Part 5: Make the worst plot you can! This sounds a bit crazy I know, but I want this to try and be FUN! Instead of trying to make a “good” plot, I want you to explore your creative side and make a really awful data visualization in every way. :)</p>
 <p>Tasks Using the chocolate dataset (or any of the modified versions you made throughout this assignment or anything else you wish you build upon it):</p>
 <p>Make the absolute worst plot that you can. You need to customize it in at least 7 ways to make it awful. In your document, write 1 - 2 sentences about each different customization you added (using bullets – i.e.&nbsp;there should be at least 7 bullet points each with 1-2 sentences), and how it could be useful for you when you want to make an awesome data visualization.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb89"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a>chocolate_title <span class="ot">&lt;-</span> <span class="st">"mean_score,review_date"</span></span>
+<span id="cb89-2"><a href="#cb89-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(long_chocolate, <span class="fu">aes</span>(<span class="at">x =</span> review_date, <span class="at">y =</span> mean_score, <span class="at">color=</span>feature)) <span class="sc">+</span></span>
+<span id="cb89-3"><a href="#cb89-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_area</span>(<span class="at">position =</span> <span class="st">"identity"</span>, <span class="at">colour =</span> <span class="st">"yellow"</span>, <span class="at">size =</span> .<span class="dv">2</span>, <span class="at">alpha =</span> .<span class="dv">4</span>, <span class="at">show.legend=</span><span class="cn">NA</span>, <span class="at">stat =</span> <span class="st">"align"</span>)<span class="sc">+</span></span>
+<span id="cb89-4"><a href="#cb89-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_text</span>(<span class="at">label=</span><span class="st">"chocolate scores"</span>)<span class="sc">+</span></span>
+<span id="cb89-5"><a href="#cb89-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(chocolate_title)<span class="sc">+</span></span>
+<span id="cb89-6"><a href="#cb89-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-79-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>This is a bad plot for the following ways:</p>
+<ol type="1">
+<li><p>The individual characteristics are not represented on the graph making intepretation impossible</p></li>
+<li><p>The color scheme is ugly and distracting</p></li>
+<li><p>The scale is such that the variation between the years is very hard to determine</p></li>
+<li><p>The label is not accurate and interferes with viewing</p></li>
+<li><p>The theme eliminates the scales making interpretation impossible.</p></li>
+<li><p>The title is not centered and not useful</p></li>
+</ol>
+<p>7.The legend is illegible</p>
+<p>#Part 6: Make my plot a better plot! The goal is to take my sad looking plot and make it better! If you’d like an example, here is a tweet I came across of someone who gave a talk about how to zhoosh up your ggplots.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb90"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(chocolate) <span class="sc">+</span></span>
+<span id="cb90-2"><a href="#cb90-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">x =</span> review_date, <span class="at">fill =</span> rating, <span class="at">group =</span> rating) <span class="sc">+</span></span>
+<span id="cb90-3"><a href="#cb90-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> 16L) <span class="sc">+</span></span>
+<span id="cb90-4"><a href="#cb90-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>(<span class="at">option =</span> <span class="st">"magma"</span>, <span class="at">direction =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb90-5"><a href="#cb90-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb90-6"><a href="#cb90-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Year"</span>,</span>
+<span id="cb90-7"><a href="#cb90-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Total number of reviews"</span>,</span>
+<span id="cb90-8"><a href="#cb90-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Source: Flavors of Cacao, http://flavorsofcacao.com/chocolate_database.html"</span>,</span>
+<span id="cb90-9"><a href="#cb90-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"Rating"</span></span>
+<span id="cb90-10"><a href="#cb90-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb90-11"><a href="#cb90-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Reviews for chocolate bars over time"</span>)<span class="sc">+</span></span>
+<span id="cb90-12"><a href="#cb90-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-80-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<ol type="1">
+<li>I did not find the violin graph helpful so switched to a histogram. The score is represented in color with intensity according to number</li>
+<li>There is a useful title at the top</li>
+<li>The relative density of reviews is preserved and represented on the graph</li>
+<li>A caption is provided with source information.</li>
+<li>The X and Y axes are clearly labeled</li>
+<li>The bins are set to appropriate size to create visually appealing display</li>
+<li>The theme is minimal and does not distract from the data being represented.</li>
+</ol>
 
 </main>
 <!-- /main column -->

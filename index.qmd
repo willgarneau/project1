@@ -559,6 +559,11 @@ long_chocolate <- long_choc %>%
 
 ```
 
+```{r}
+view(long_chocolate)
+```
+
+
 Part 4: Data visualization
 In this part of the project, we will continue to work with our now tidy song dataset from the previous part.
 
@@ -592,6 +597,13 @@ ggplot(long_chocolate) +
 ```
 
 
+```{r}
+ggplot(long_chocolate, aes(x = review_date, y = mean_score)) +
+  geom_area(aes(fill = feature), position = "identity", colour = "blue", size = .2, alpha = .4)
+```
+
+
+
 #Part 5: Make the worst plot you can!
 This sounds a bit crazy I know, but I want this to try and be FUN! Instead of trying to make a “good” plot, I want you to explore your creative side and make a really awful data visualization in every way. :)
 
@@ -602,5 +614,55 @@ Make the absolute worst plot that you can. You need to customize it in at least 
 In your document, write 1 - 2 sentences about each different customization you added (using bullets – i.e. there should be at least 7 bullet points each with 1-2 sentences), and how it could be useful for you when you want to make an awesome data visualization.
 
 
+```{r}
+chocolate_title <- "mean_score,review_date"
+ggplot(long_chocolate, aes(x = review_date, y = mean_score, color=feature)) +
+  geom_area(position = "identity", colour = "yellow", size = .2, alpha = .4, show.legend=NA, stat = "align")+
+    geom_text(label="chocolate scores")+
+    ggtitle(chocolate_title)+
+  theme_void()
+```
+
+This is a bad plot for the following ways:
+
+1. The individual characteristics are not represented on the graph making intepretation impossible
+
+2. The color scheme is ugly and distracting
+
+3. The scale is such that the variation between the years is very hard to determine
+
+4. The label is not accurate and interferes with viewing
+
+5. The theme eliminates the scales making interpretation impossible.
+
+6. The title is not centered and not useful
+
+7.The legend is illegible
+
+#Part 6: Make my plot a better plot!
+The goal is to take my sad looking plot and make it better! If you’d like an example, here is a tweet I came across of someone who gave a talk about how to zhoosh up your ggplots.
 
 
+```{r}
+ggplot(chocolate) +
+  aes(x = review_date, fill = rating, group = rating) +
+  geom_histogram(bins = 16L) +
+  scale_fill_viridis_c(option = "magma", direction = 1) +
+  labs(
+    x = "Year",
+    y = "Total number of reviews",
+    caption = "Source: Flavors of Cacao, http://flavorsofcacao.com/chocolate_database.html",
+    fill = "Rating"
+  ) +
+  ggtitle("Reviews for chocolate bars over time")+
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+
+1. I did not find the violin graph helpful so switched to a histogram.  The score is represented in color with intensity according to number
+2. There is a useful title at the top
+3. The relative density of reviews is preserved and represented on the graph
+4. A caption is provided with source information.
+5. The X and Y axes are clearly labeled
+6. The bins are set to appropriate size to create visually appealing display
+7. The theme is minimal and does not distract from the data being represented.
