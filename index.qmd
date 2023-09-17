@@ -545,8 +545,62 @@ new_chocolate <- new_chocolate %>%
   mutate(mean_earthy = mean(char_earthy, na.rm = TRUE))
 ```
 
+```{r}
+long_choc<-new_chocolate %>%select(review_date,mean_beans,mean_sugar,mean_cocoa_butter,mean_vanilla,mean_letchin,mean_salt,mean_cocoa,mean_sweet,mean_nutty,mean_creamy,mean_roasty,mean_earthy)
+```
 
 
 Convert this wide dataset into a long dataset with a new feature and mean_score column.
+```{r}
+long_chocolate <- long_choc %>%
+  pivot_longer(cols = c('mean_beans', 'mean_sugar', 'mean_cocoa_butter', 'mean_vanilla', 'mean_letchin', 'mean_salt', 'mean_cocoa', 'mean_sweet', 'mean_nutty', 'mean_creamy', 'mean_roasty', 'mean_earthy'),
+    names_to = "feature", 
+    values_to = "mean_score")
+
+```
+
+Part 4: Data visualization
+In this part of the project, we will continue to work with our now tidy song dataset from the previous part.
+
+Tasks
+Use the functions in ggplot2 package to make a scatter plot of the mean_scores (y-axis) over time (x-axis). One plot for each mean_score. For full credit, your plot should include:
+
+An overall title for the plot and a subtitle summarizing key trends that you found. Also include a caption in the figure with your name.
+
+Both the observed points for the mean_score, but also a smoothed non-linear pattern of the trend
+All plots should be shown in the one figure
+There should be an informative x-axis and y-axis label
+Consider playing around with the theme() function to make the figure shine, including playing with background colors, font, etc.
+
+Notes
+You may need to use functions outside these packages to obtain this result.
+
+Don’t worry about the ordering of the rows or columns. Depending on whether you use gather() or pivot_longer(), the order of your output may differ from what is printed above. As long as the result is a tidy data set, that is sufficient.
+
+
+```{r}
+ggplot(long_chocolate) +
+ aes(x = review_date, y = mean_score) +
+ geom_point(shape = "circle", size = 1.5, 
+ colour = "#112446") +
+ labs(x = "Years", y = "%", title = "Chocolate", subtitle = "Trends in chocolate characteristics") +
+ theme_bw() +
+ facet_wrap(vars(feature))+
+  stat_smooth(method = "loess",
+              formula = y ~ x,
+              geom = "smooth")
+```
+
+
+#Part 5: Make the worst plot you can!
+This sounds a bit crazy I know, but I want this to try and be FUN! Instead of trying to make a “good” plot, I want you to explore your creative side and make a really awful data visualization in every way. :)
+
+Tasks
+Using the chocolate dataset (or any of the modified versions you made throughout this assignment or anything else you wish you build upon it):
+
+Make the absolute worst plot that you can. You need to customize it in at least 7 ways to make it awful.
+In your document, write 1 - 2 sentences about each different customization you added (using bullets – i.e. there should be at least 7 bullet points each with 1-2 sentences), and how it could be useful for you when you want to make an awesome data visualization.
+
+
 
 
