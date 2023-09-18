@@ -7,11 +7,11 @@ editor_options:
   chunk_output_type: console
 ---
 
-```{r setup, include=FALSE}
+```{r setup, include=FALSE, echo=FALSE}
 knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
 ```
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, results='hide'}
 #| eval: false
 install.packages("tidyverse")
 install.packages("here")
@@ -24,7 +24,7 @@ install.packages('knitr', dependencies = TRUE)
 install.packages("gapminder",repos = "http://cran.us.r-project.org")
 ```
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, results='hide'}
 library(here)
 library(tidyverse)
 library(tidytuesdayR)
@@ -36,7 +36,6 @@ library(tab)
 library(knitr)
 library(ggplot2)
 ```
-
 
 ```{r, echo=FALSE}
 tuesdata <- tidytuesdayR::tt_load("2022-01-18") 
@@ -68,7 +67,7 @@ chocolate <- readRDS(here("data", "chocolate.RDS"))
 as_tibble(chocolate)
 ```
 
-1. Make a histogram of the rating scores to visualize the overall distribution of scores. Change the number of bins from the default to 10, 15, 20, and 25. Pick on the one that you think looks the best. Explain what the difference is when you change the number of bins and explain why you picked the one you did.
+1.  Make a histogram of the rating scores to visualize the overall distribution of scores. Change the number of bins from the default to 10, 15, 20, and 25. Pick on the one that you think looks the best. Explain what the difference is when you change the number of bins and explain why you picked the one you did.
 
 ```{r, echo=FALSE}
 #| eval: false
@@ -82,9 +81,9 @@ ggplot(chocolate) +
   theme_minimal()
 ```
 
-Bin size affects the density of the lines on the x axis.  I changed the size of the bins to a visually pleasing one that maintained distinctions between ratings.
+Bin size affects the density of the lines on the x axis. I changed the size of the bins to a visually pleasing one that maintained distinctions between ratings.
 
-2. Consider the countries where the beans originated from. How many reviews come from each country of bean origin?
+2.  Consider the countries where the beans originated from. How many reviews come from each country of bean origin?
 
 ```{r}
 origin<-select(chocolate, country_of_bean_origin,rating) 
@@ -100,7 +99,7 @@ chocolate.o %>% group_by(country_of_bean_origin) %>% count()
 
 See output
 
-3. What is average rating scores from reviews of chocolate bars that have Ecuador as country_of_bean_origin in this dataset? For this same set of reviews, also calculate (1) the total number of reviews and (2) the standard deviation of the rating scores. Your answer should be a new data frame with these three summary statistics in three columns. Label the name of these columns mean, sd, and total.
+3.  What is average rating scores from reviews of chocolate bars that have Ecuador as country_of_bean_origin in this dataset? For this same set of reviews, also calculate (1) the total number of reviews and (2) the standard deviation of the rating scores. Your answer should be a new data frame with these three summary statistics in three columns. Label the name of these columns mean, sd, and total.
 
 ```{r}
 rating<-select(chocolate, country_of_bean_origin,rating)
@@ -199,7 +198,7 @@ more_than_50<-group_by(chocolate, country_of_bean_origin) %>%
   filter(n>=50)
 ```
 
-Using the variable describing the chocolate percentage for each review, create a new column that groups chocolate percentages into one of four groups: (i) \<60%, (ii) \>=60 to \<70%, (iii) \>=70 to \<90%, and (iii) \>=90% 
+Using the variable describing the chocolate percentage for each review, create a new column that groups chocolate percentages into one of four groups: (i) \<60%, (ii) \>=60 to \<70%, (iii) \>=70 to \<90%, and (iii) \>=90%
 
 (Hint check out the substr() function in base R and the case_when() function from dplyr -- see example below).
 
@@ -214,7 +213,7 @@ by_percent<-chocolate %>% filter(country_of_bean_origin %in% c("Belize","Blend",
     ))
 ```
 
-Using the new column described in #2, re-order the factor levels (if needed) to be starting with the smallest percentage group and increasing to the largest percentage group 
+Using the new column described in #2, re-order the factor levels (if needed) to be starting with the smallest percentage group and increasing to the largest percentage group
 
 (Hint check out the fct_relevel() function from forcats).
 
@@ -624,3 +623,25 @@ ggplot(chocolate) +
 5.  The X and Y axes are clearly labeled
 6.  The bins are set to appropriate size to create visually appealing display
 7.  The theme is minimal and does not distract from the data being represented.
+
+Sources:
+
+https://chat.openai.com/
+
+https://www.rdocumentation.org
+
+https://argoshare.is.ed.ac.uk
+
+https://r-graph-gallery.com
+
+https://environmentalcomputing.net
+
+https://www.geeksforgeeks.org
+
+https://ggplot2.tidyverse.org
+
+https://community.rstudio.com
+
+https://stackoverflow.com/
+
+https://cran.r-project.org/web/packages/esquisse/index.html
